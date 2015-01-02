@@ -97,12 +97,28 @@
 ##
 ## 4. Pairing candidates for GSP1 and GSP2 based on pair penalty scores.
 ##
+## 5. Check uniqueness of 12 bases at 3' of all primers. 
+##      - If not unique, candidate pairs from 'ranked.all.candidate.pairs'
+##	    will be retreived, ranked 2/3/.., until all tail 12 bases
+##          are unique.
+##      - If all unique, proceed.
+##      - Save the final tail 12 bases of all primers for future use
+##          (e.g, to check uniqueness when adding new primers 
+##	    to an existing panel).
 ## 
-## === An example - a lung fusion panel ===
+## === Example 1. - a fusion panel ===
 ##
-## Please see the example folder for how to create a list of genes, and if
-##   needed, exons and sense/antisense primers, as well as final result
-##   output on primer sequences, primer bed file etc.
+## Please see the 'example/lung.fusion.genelist.txt' for how to
+##   create a list of genes (with options on targeted exons and
+##   sense/antisense), as well as final result output about primer
+##   sequences, primer bed file etc.
+##
+##
+## === Example 2. - a mutation panel ===
+## Please see the 'example/cancer.v1.genelist.txt' for how to 
+##   create a list of genes (with options on targeted exons), 
+##   as well as final result output about primer sequences,
+##   primer bed file etc.
 ##
 ###############################################################################
 
@@ -133,20 +149,24 @@ if (assaytype == 'fusion'){
 
 panel.NM = sort(unique(gene.list$NM))
 writeLines(panel.NM, 'panel.NM')
-system(paste("join panel.NM ", depdir, "/hg19.RefGene.NM > target.refseq", sep=''))
+system(paste("join panel.NM ", depdir, "/hg19.RefGene.NM > target.refseq.0", sep=''))
+system(paste("sort -k1,1 -u target.refseq.0 > target.refseq", sep=''))
 
 ######################################################################
 # step 1. retreive sequence from genome 
+cat("step 1. retreive sequence from genome...\n")
 source(paste(ampdir, '/step.1.retreive.sequence.R', sep='')) 
 	
 
 ######################################################################
 # step 2. call primer3 - several iteration rounds
+cat("step 2. call primer3 - several iteration rounds...\n")
 source(paste(ampdir, '/step.2.call.primer3.R', sep='')) 
 
 
 ######################################################################
 # setp 3. BLAT candidate primers against genome
+cat("setp 3. BLAT candidate primers against genome...\n")
 	t = 11
 	s = 4
 	n.srv = ceiling(ncpu/4)
@@ -170,6 +190,7 @@ system(paste('bash ', ampdir, '/scripts/afterBlat.sh', sep=''))
 
 ######################################################################
 # step 4. pair GSP1-GPS2
+cat("step 4. pair GSP1-GPS2...\n")
 source(paste(ampdir, '/step.4.pairing.GSPs.R', sep='')) 
 
 	## top candidates
@@ -189,6 +210,8 @@ source(paste(ampdir, '/step.4.pairing.GSPs.R', sep=''))
 #          e.g, to check uniqueness when adding new primers 
 #	   to an existing panel.
 #
+cat("step 5. check uniqueness of 12 bases at 3' of all primers 
+    and final output...\n")
 pairs1 = read.table('ranked.1st.pairs', header=T, stringsAsFactors=F)
 pairs1$target = sub(":.*", "", pairs1$r1.qName)
 source(paste(ampdir, '/step.5.check.uniqueness.R', sep='')) 
@@ -288,5 +311,6 @@ final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 	}
 	system('rm -rf split seq seq.noMask out all.psl.matt.sorted primer.pos.tm.sorted primer.psl missed.seq_* splitFa.Rout panel.NM primer.candidates.0 primer3.exome.setting*')
 
+cat("AMP-primer-design finished successfully END\n")
 ## END
 
