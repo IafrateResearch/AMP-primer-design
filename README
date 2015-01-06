@@ -26,6 +26,17 @@ The dependecy data (e.g. in '~/dependency-AMP') should contain:
   hg19.2bit                   - contains the complete hg19 Human Genome in the 2bit (Available from
 	                          http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.2bit)
 
+  hg19.refGene.NM	      - contains the refGene transcript and exons coordinates
+				-- to download:
+					wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
+				-- to decompress:
+					gunzip refGene.txt.gz
+				-- remove first column and sort by NM:
+					cut -f 2- refGene.txt.gz | sort -k1,1b > refGene.sort
+				-- add header
+					cat /path/to/AMP-primer-design/refGene.header refGene.sort > 
+					  /path/to/dependency-AMP/hg19.refGene.NM
+
   NGSadaptors_and_humanRep.fa - contains sequences used for filtering primers during primer3 design.
 				It cosists of:
 			        a) NGS adaptors (supplied by this pipeline 'NGSadaptors.fa')
