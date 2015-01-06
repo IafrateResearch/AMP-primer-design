@@ -1,8 +1,0 @@
-assaytype
-utr
-NGSadaptors_and_humanRep
-GSP2tag
-ncpu
-pjdir
-GSP1tag
-keep_gfSvr
