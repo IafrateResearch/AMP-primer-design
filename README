@@ -11,7 +11,7 @@ Reference:
 Contact     : Zongli Zheng, The Iafrate Lab
 Date created: 2012-04-13
 
-1. Check out 'main.R' for useage.
+1. Check out 'main.R' for usage.
 
 2. Required software, R library and data dependency
 
@@ -21,9 +21,9 @@ Date created: 2012-04-13
                 SNPlocs.Hsapiens.dbSNP.20111119
  4) The dependency data (e.g. ~/dependency-AMP/)
 
-The dependecy data (e.g. in '~/dependency-AMP') should contain:
+The dependency data (e.g. in '~/dependency-AMP') should contain:
 
-  hg19.2bit                   - contains the complete hg19 Human Genome in the 2bit (Available from
+  hg19.2bit                   - contains the complete hg19 Human Genome in 2bit format (Available from
 	                          http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.2bit)
 
   hg19.RefGene.NM	      - contains the refGene transcript and exons coordinates
@@ -32,15 +32,15 @@ The dependecy data (e.g. in '~/dependency-AMP') should contain:
 				-- to decompress:
 					gunzip refGene.txt.gz
 				-- remove first column and sort by NM:
-					cut -f 2- refGene.txt.gz | sort -k1,1b > refGene.sort
+					cut -f 2- refGene.txt | sort -k1,1b > refGene.sort
 				-- add header
 					cat /path/to/AMP-primer-design/refGene.header refGene.sort > 
 					  /path/to/dependency-AMP/hg19.RefGene.NM
 
   NGSadaptors_and_humanRep.fa - contains sequences used for filtering primers during primer3 design.
-				It cosists of:
+				It consists of:
 			        a) NGS adaptors (supplied by this pipeline 'NGSadaptors.fa')
-				b) Human repetitive seqeunce (available from
+				b) Human repetitive sequences (available from
 				     http://www.girinst.org/server/RepBase/index.php, which
 			             requires registration [free for non-profit])
 			        To create, run:
@@ -54,7 +54,7 @@ The dependecy data (e.g. in '~/dependency-AMP') should contain:
 					"V1" "V2" "V3" "V4" "V5"
 					"1" "1" 10583 "rs58108140" "G" "A"
 					"2" "1" 10611 "rs189107123" "C" "G"
-				(the complied dbsnp.tar.gz file will be uploaded to a public 
+				(the compiled dbsnp.tar.gz file will be uploaded to a public 
 				sever soon)
 
 ## End
