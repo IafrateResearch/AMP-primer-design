@@ -1,134 +1,14 @@
-###############################################################################
-## Purpose: 
-##    To design primers for targeted cDNA seq for fusion detection 
-##    using anhcored multiplex PCR.
-## 
-## Reference:
-##   Zheng Z, et al. Anchored multiplex PCR for targeted next-generation sequencing.
-##   Nat Med. 2014 (http://www.nature.com/nm/journal/v20/n12/full/nm.3729.html)
-##
-## Contact     : Zongli Zheng, The Iafrate Lab, Massachusetts General Hospital
-## Date created: 2012-04-13
-##
-## === Usage example: ===
-##
-## 1. Creat a panel gene list file with RefSeq transcript IDs "NM_###",
-##      see the file 'example/lung.fusion.genelist.txt' for example.
-##   
-##    The NM numbers will be used to retreive template sequences from human
-##    reference genome (GRCh37/hg19) for both sense and antisence sequences.
-##
-##    Alternatively, you can use your own template seqeunces (e.g. virus) under
-##    the ~/project-AMP/$panel/seq/ folder (under development).
-##
-##  2. Run the command (see also 'example.command.txt')
-##
-##  > Rscript /path/to/AMP-primer-design/main.by.NM_cDNA.R \
-##          assaytype=\"fusion"\
-##          panel=\"lung.fusion\"  \
-##          genelist=\"~/project-AMP/lung.fusion.genelist.txt\"  \ 
-##          pjdir=\"~/project-AMP\"  \ 
-##          depdir=\"~/dependency-AMP\"  \
-##          ampdir=\"~/repo/AMP-primer-design\"  \ 
-##          primer3path=\"~/primer3-2.3.5\"  \ 
-##          blatdir=\"~/bin/x86_64\" \
-##          keep_gfSvr=1 \
-##          GSP1tag=\"GGATCTCGACGCTCTCCCT\"  \
-##          GSP2tag=\"CCTCTCTATGGGCAGTCGGTGAT\"  \
-##          ncpu=8  \
-##          tempsize=90  \
-##          NGSadaptors_and_humanRep=\"NGSadaptors_and_humanRep.fa\" 
-##
-##    where,
-##     assaytype   - 'fusion' or 'mutation'. Fusion assay will retreive
-##                   exonic sequence template for primer design, and 
-##                   mutation assay intronic template.
-##     panel       - the name of panel (e.g. \"lung.fusion\")
-##     genelist    - name (with path) of the gene list, see 
-##                     'example/lung.fusion.genelist.txt' for example.
-##     pjdir       - is the project folder (required). A project/panel 
-##                     folder e.g.  '~/project-AMP/lung.fusion' will
-##                     be created by the pipeline
-##     depdir      - path to dependency datasets
-##     ampdir      - path to AMP primer design
-##     primer3path - path to Primer3
-##     blatpath    - path to BLAT
-##     keep_gfSvr  - keep or free BALT gfSever in memory
-##     GSP1tag     - the tag to be appended to 5' end of GSP1 primers.
-##                     This tag do not participate in sequencing.
-##     GSP2tag     - the tag to be appended to 5' end of GSP2 primers.
-##                     For Illumina, this tag is Read2 Sequencing Primer.
-##                     Default here is Ion Torrent (P23) sequence. This 
-##                     tag allows for the same pirmers (hunreds to thousands)
-##                     to be used for both Ion Torrent and Illumina platforms.
-##                     (For Illumina Miseq, if use this GSP2 tag, in wet-lab:
-##                        a. Add 3 ul of 100 μM of Illumina.custom.Index1.sequencing.primer
-##                           to Miseq Reagent cartridge position 13 (Index Primer Mix)
-##                        b. Add 3 ul of 100 μM of Illumina.custom.Read2.sequencing.primer
-##                           to Miseq Reagent cartridge position 14 (Read 2 Primer Mix).
-##                      See NGSadaptors.fa for the above primer seqeunces).
-##     ncpu        - number of CPUs for multi-threading
-##     tempsize    - size of template seqeunce to retreive from genome and
-##                   to design primers on. Default 90 bp considers degraded
-##                     RNA in FFPE samples
-##
-##     (Note: When running Rscript in Linux/Unix, remember to quote 
-##        string values using \", and to add \ to separeate one command
-##        into multiple lines, as shown in 'example.command.txt'.)
-##
-##
-## === Computational steps of the pipeline ===
-##
-## 1. Generate template sequences (both sense and antisense)
-##      and mask every dbSNPv137 locus as "N".
-##
-## 2. Use Primer3 to design candiate RIGHT primers.
-##
-##      - Up to 6 iterations of decreased design stringency are used to 
-##      design candidate primers. Failed to design targets will be 
-##      reported. creased stringency. 
-##
-##      - Primers are filtered against NGS adaptors including 
-##      96 Illumina N5s, 12 N7s, 96 IonTorrent adaptors and 
-##      human repetative sequences.
-##
-## 3. Map candidate primers against human genome
-##    - Filter those mapped more than 5 (arbitrary) locations in the genome.   
-##
-## 4. Pairing candidates for GSP1 and GSP2 based on pair penalty scores.
-##
-## 5. Check uniqueness of 12 bases at 3' of all primers. 
-##      - If not unique, candidate pairs from 'ranked.all.candidate.pairs'
-##	    will be retreived, ranked 2/3/.., until all tail 12 bases
-##          are unique.
-##      - If all unique, proceed.
-##      - Save the final tail 12 bases of all primers for future use
-##          (e.g, to check uniqueness when adding new primers 
-##	    to an existing panel).
-## 
-## === Example 1. - a fusion panel ===
-##
-## Please see the 'example/lung.fusion.genelist.txt' for how to
-##   create a list of genes (with options on targeted exons and
-##   sense/antisense), as well as final result output about primer
-##   sequences, primer bed file etc.
-##
-##
-## === Example 2. - a mutation panel ===
-## Please see the 'example/cancer.v1.genelist.txt' for how to 
-##   create a list of genes (with options on targeted exons), 
-##   as well as final result output about primer sequences,
-##   primer bed file etc.
-##
-###############################################################################
 
 # get initial values
-args=(commandArgs(TRUE))
-for(i in 1:length(args)){eval(parse(text=(args[[i]])))}
+system("sed 's/: /=/g' config.txt | sed 's:{::' | sed 's:}::' | sed 's/, /; /g' > config.R")
+source("config.R")
 
 ## create working dir for the panel
 paneldir = paste(pjdir, panel, sep='/')
 dir.create(paneldir, showWarnings = FALSE, recursive = TRUE)
+
+system(paste("cp config.txt ", paneldir, sep=''))
+system(paste("cp config.R ", paneldir, sep=''))
 
 setwd(paneldir) 
 
@@ -311,6 +191,6 @@ final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 	}
 	system('rm -rf split seq seq.noMask out all.psl.matt.sorted primer.pos.tm.sorted primer.psl missed.seq_* splitFa.Rout panel.NM primer.candidates.0 primer3.exome.setting*')
 
-cat("AMP-primer-design finished successfully END\n")
+cat("AMP-primer-design completed successfully.\n")
 ## END
 
