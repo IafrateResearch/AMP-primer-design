@@ -176,7 +176,7 @@ final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 	GSP2 = final.s[, c('gsp2.name', 'GSP2')]
 
 	# primer bed - only GSP2 is sequenced/relevant
-	primer.bed.s = final.s[, c('r1.chr', 'r2.tStart', 'r2.tEnd', 'gsp2.name')]
+	primer.bed.s = final.s[, c('r2.chr', 'r2.tStart', 'r2.tEnd', 'gsp2.name')]
 
 	write.csv(GSP1, paste(panel, '_GSP1.csv', sep=''), quote=F, row.names=F)
 	write.csv(GSP2, paste(panel, '_GSP2.csv', sep=''), quote=F, row.names=F)
