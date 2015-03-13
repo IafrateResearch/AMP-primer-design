@@ -31,22 +31,26 @@
 ##   - target.refseq
 ##   - subExonSize (for mutation assay)
 
-ref = read.table('target.refseq', header=F, stringsAsFactors=F)
-names(ref)=c('name',    'chrom', 'strand', 'txStart', 'txEnd', 'cdsStart', 'cdsEnd', 'exonCount', 'exonStarts', 'exonEnds', 'score', 'name2', 'cdsStartStat', 'cdsEndStat', 'exonFrames')
-# head(ref, 3)
-
-## retreive sequences by refseq NM (by gene names or by chr.pos not supported yet)
-genes = ref$name2
-
 # clear files if exist
 system('rm -rf seq/ seq.noMask/', ignore.stderr=F)
 system('mkdir seq seq.noMask')
+
+if (assaytype %in% c('fusion', 'mutation')){
+	ref = read.table('target.refseq', header=F, stringsAsFactors=F)
+	names(ref)=c('name',    'chrom', 'strand', 'txStart', 'txEnd', 'cdsStart', 'cdsEnd', 'exonCount', 'exonStarts', 'exonEnds', 'score', 'name2', 'cdsStartStat', 'cdsEndStat', 'exonFrames')
+
+	# head(ref, 3)
+	## retreive sequences by refseq NM (by gene names or by chr.pos not supported yet)
+	genes = ref$name2
+} else {
+	bed = read.table('_input.bed', header=T, stringsAsFactors=F)
+	genes = bed$target
+}
 
 # multi-threading
 nrun=length(list.files('./', '_running_'))
 if (nrun>0){system('rm _running_*')}
 nrun = 1
-
 
 for (gene in genes){
         while (nrun >= ncpu){
@@ -64,7 +68,12 @@ for (gene in genes){
 		system(paste("Rscript --vanilla ", ampdir, "/scripts/get.seq.mutation.R ",
 			     gene, " ", tempsize, " ", depdir, " ", subExonSize, " "
 			     , leadsize, " &", sep=''))
-	} else {stop ("assaytype should be 'fusion' or 'mutation'")}
+	} else if (assaytype == 'bed'){
+		## from bed file
+		system(paste("Rscript --vanilla ", ampdir, "/scripts/get.seq.bed.R ",
+			     gene, " ", tempsize, " ", depdir, " ", subExonSize, " "
+			     , leadsize, " &", sep=''))
+	} else {stop ("assaytype should be 'fusion', 'mutation' or 'bed'")}
 }
 
         # wait until all genes are done

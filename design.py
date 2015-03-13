@@ -8,11 +8,14 @@ import argparse
 def parseArgs():
 
     parser = argparse.ArgumentParser(description='AMP primer design input arguments')
-    parser.add_argument('--assaytype', default='fusion', help="'fusion' or 'mutation'. \
-		    Fusion assay will retrieve exonic sequence template for primer \
-		    design, and mutation assay intronic template.")
-    parser.add_argument('--genelist', required=True, help="name (with path) of the gene list, see\
-		    'example/lung.fusion.genelist.txt' for example.")
+    parser.add_argument('--assaytype', default='fusion', help="'fusion', 'mutation' or 'bed'. \
+		    The 'fusion' assay will retrieve exonic sequence near exon-intron junction as \
+		    template for designing primers that can extend into next exon; 'mutation' \
+		    assay will retrieve intronic template for designing primers that can extend\
+		    into downstream of nearby exons; 'bed' assay will retrieve sequences flanking \
+		    the targeted region that user specified.")
+    parser.add_argument('--genelist', required=True, help="name (with path) of the gene list \
+		    or bed file, see 'example/lung.fusion.genelist.txt' for example.")
     parser.add_argument('--depdir', required=True, help="path to dependency data.")
     parser.add_argument('--panel', required=True, help="the name of panel, e.g. 'lung.fusion'.")
     parser.add_argument('--pjdir', required=True, help="the project folder. A project/panel \
@@ -33,6 +36,10 @@ def parseArgs():
 		    template sequence and target location. This is to avoid GSP2 ends in exon\
 		    boundary.")
     parser.add_argument('--utr', type=int, default=0, help="whether or not to target UTR.")
+    parser.add_argument('--previousTailFile', default='NO', help="file name (with path) of the GSP \
+		    primer tail 12 bases from a previous panel where the newly designed primers \
+		    are to be added into. Compatablity will be checked to ensure no same GSP \
+		    tails (12 bases) in current design and the existing panel.")
     parser.add_argument('--GSP1tag', default='GGATCTCGACGCTCTCCCT', help="the tag to be appended\
 		    to 5' end of GSP1 primers. This tag do not participate in sequencing.")
     parser.add_argument('--GSP2tag', default='CCTCTCTATGGGCAGTCGGTGAT', help="the tag to be \

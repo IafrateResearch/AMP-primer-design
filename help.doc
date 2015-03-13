@@ -1,0 +1,69 @@
+usage: design.py [-h] [--assaytype ASSAYTYPE] --genelist GENELIST --depdir
+                 DEPDIR --panel PANEL --pjdir PJDIR --ampdir AMPDIR --blatdir
+                 BLATDIR --primer3path PRIMER3PATH [--keep_gfSvr KEEP_GFSVR]
+                 [--ncpu NCPU] [--tempsize TEMPSIZE]
+                 [--subExonSize SUBEXONSIZE] [--leadsize LEADSIZE] [--utr UTR]
+                 [--previousTailFile PREVIOUSTAILFILE] [--GSP1tag GSP1TAG]
+                 [--GSP2tag GSP2TAG]
+                 [--NGSadaptors_and_humanRep NGSADAPTORS_AND_HUMANREP]
+
+AMP primer design input arguments
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --assaytype ASSAYTYPE
+                        'fusion', 'mutation' or 'bed'. The 'fusion' assay will
+                        retrieve exonic sequence near exon-intron junction as
+                        template for designing primers that can extend into
+                        next exon; 'mutation' assay will retrieve intronic
+                        template for designing primers that can extend into
+                        downstream of nearby exons; 'bed' assay will retrieve
+                        sequences flanking the targeted region that user
+                        specified.
+  --genelist GENELIST   name (with path) of the gene list or bed file, see
+                        'example/lung.fusion.genelist.txt' for example.
+  --depdir DEPDIR       path to dependency data.
+  --panel PANEL         the name of panel, e.g. 'lung.fusion'.
+  --pjdir PJDIR         the project folder. A project/panel folder, e.g.
+                        '~/project-AMP/lung.fusion' will be created by the
+                        pipeline.
+  --ampdir AMPDIR       path to AMP primer design.
+  --blatdir BLATDIR     path to BLAT.
+  --primer3path PRIMER3PATH
+                        path to Primer3.
+  --keep_gfSvr KEEP_GFSVR
+                        keep BALT gfSever in memory.
+  --ncpu NCPU           number of available CPUs for multi-threading.
+  --tempsize TEMPSIZE   size of template sequence to retrieve from genome and
+                        to design primers on. Default 90 bp considers degraded
+                        RNA in FFPE samples.
+  --subExonSize SUBEXONSIZE
+                        size for tiling targets. For exons larger than
+                        subExonSize, the exons will be divided into subExons
+                        with max size of subExonSize a, b, c...
+  --leadsize LEADSIZE   the chromosomal distance between template sequence and
+                        target location. This is to avoid GSP2 ends in exon
+                        boundary.
+  --utr UTR             whether or not to target UTR.
+  --previousTailFile PREVIOUSTAILFILE
+                        file name (with path) of the GSP primer tail 12 bases
+                        from a previous panel where the newly designed primers
+                        are to be added into. Compatablity will be checked to
+                        ensure no same GSP tails (12 bases) in current design
+                        and the existing panel.
+  --GSP1tag GSP1TAG     the tag to be appended to 5' end of GSP1 primers. This
+                        tag do not participate in sequencing.
+  --GSP2tag GSP2TAG     the tag to be appended to 5' end of GSP2 primers. For
+                        Illumina, this tag is Read2 Sequencing Primer. Default
+                        here is Ion Torrent (P23) sequence. This tag allows
+                        for the same primers (hundreds to thousands) to be
+                        used for both Ion Torrent and Illumina platforms. (For
+                        Illumina Miseq, if use this GSP2 tag, in wet-lab: a.
+                        Add 3 ul of 100 uM of
+                        Illumina.custom.Index1.sequencing.primer to Miseq
+                        Reagent cartridge position 13 (Index Primer Mix) b.
+                        Add 3 ul of 100 uM of
+                        Illumina.custom.Read2.sequencing.primer to Miseq
+                        Reagent cartridge position 14 (Read 2 Primer Mix). See
+                        NGSadaptors.fa for the above primer sequences)
+  --NGSadaptors_and_humanRep NGSADAPTORS_AND_HUMANREP

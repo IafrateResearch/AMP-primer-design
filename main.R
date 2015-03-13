@@ -13,12 +13,22 @@ system(paste("cp config.R ", paneldir, sep=''))
 setwd(paneldir) 
 
 ## get gene list
-gene.list = read.table(genelist, sep='\t', header=T, fill=T)
+if (assaytype == 'bed'){
+	gene.list = read.table(genelist, sep='\t', header=F, fill=T)
+		if (ncol(gene.list) <=3){
+			gene.list$target = paste('target', 1:nrow(gene.list), sep='')
+		}
+	names(gene.list) = c('chrom', 'start', 'end', 'target')
+	gene.list$target = gsub(' ', '.', gene.list$target)
+} else {
+	gene.list = read.table(genelist, sep='\t', header=T, fill=T)
 
-## remove blank space, heading 0s
-gene.list$NM = gsub(' ', '', gene.list$NM)
-gene.list$exon = tolower(gsub(' ', '', gene.list$exon))
-gene.list$exon = gsub('^0+', '', gene.list$exon)
+	## remove blank space, heading 0s
+	gene.list$NM = gsub(' ', '', gene.list$NM)
+	gene.list$exon = tolower(gsub(' ', '', gene.list$exon))
+	gene.list$exon = gsub('^0+', '', gene.list$exon)
+}
+
 
 if (assaytype == 'fusion'){
 	gene.list$sense = tolower(gsub(' ', '', gene.list$sense))
@@ -27,10 +37,20 @@ if (assaytype == 'fusion'){
 	gene.list$sense = 'both'
 }
 
-panel.NM = sort(unique(gene.list$NM))
-writeLines(panel.NM, 'panel.NM')
-system(paste("join panel.NM ", depdir, "/hg19.RefGene.NM > target.refseq.0", sep=''))
-system(paste("sort -k1,1 -u target.refseq.0 > target.refseq", sep=''))
+if (assaytype %in% c('fusion', 'mutation')){
+	panel.NM = sort(unique(gene.list$NM))
+	writeLines(panel.NM, 'panel.NM')
+	system(paste("join panel.NM ", depdir, "/hg19.RefGene.NM > target.refseq.0", sep=''))
+	system(paste("sort -k1,1 -u target.refseq.0 > target.refseq", sep=''))
+} else {
+	write.table(gene.list, '_input.bed', sep='\t', quote=F, row.names=F)
+}
+
+## tail
+if (previousTailFile != 'NO'){
+	system(paste("cp ", previousTailFile, " ./previous.panel.t12", sep=''))
+}
+
 
 ######################################################################
 # step 1. retreive sequence from genome 
@@ -117,13 +137,24 @@ if (assaytype == 'fusion'){
 	pairs.keep$sense = pairs.keep$exonSize
 }
 
-gene.NM = ref[,c('name2','name')]
-names(gene.NM) = c('gene', 'NM')
-final = merge(pairs.keep, gene.NM, by='gene')
-final$gsp1.name = paste(final$gene, '_ex', final$exon, '_', final$sense
+
+if (assaytype %in% c('fusion', 'mutation')){
+	gene.NM = ref[,c('name2','name')]
+	names(gene.NM) = c('gene', 'NM')
+	final = merge(pairs.keep, gene.NM, by='gene')
+	final$gsp1.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 			  , '.1 (', final$NM, ')', sep='')
-final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
+	final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 			  , '.2 (', final$NM, ')', sep='')
+} else {
+	final = pairs.keep
+	final$gsp1.name = paste(final$gene, '_', final$sense
+			  , '.1', sep='')
+	final$gsp2.name = paste(final$gene, '_', final$sense
+			  , '.2', sep='')
+}
+
+
 
 # output all exons
 	gsp1 = final[, c('gsp1.name', 'GSP1')]
@@ -138,6 +169,8 @@ final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 		    , quote=F, row.names=F, col.names=F)
 
 # selected exon/sense
+if (assaytype != 'bed'){
+
 	if (assaytype == 'fusion'){
 		final$nm.sense = paste(final$NM, tolower(final$sense), sep='_')
 		gene.list$nm.sense = paste(gene.list$NM, gene.list$sense, sep='_')
@@ -161,13 +194,14 @@ final$gsp2.name = paste(final$gene, '_ex', final$exon, '_', final$sense
 		final$select[final$exon.select ==1] = 1
 	}
 
-
+	final.s = subset(final, select==1)
+} else {
+	final.s = final
+}
 	## backup final data
 	 write.table(final, paste(panel, '_intermediate.data.txt', sep=''), sep='\t'
 		     , quote=F, row.names=F)
 	
-
-	final.s = subset(final, select==1)
 
 	##############################
 	## final output
