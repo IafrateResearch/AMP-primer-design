@@ -1,6 +1,6 @@
 
 ## This script is to be called by 'step.1.retreive.sequence.R' to:
-##   - retreive exonic seqeuence templates from genome (hg19/b37) 
+##   - retreive exonic seqeuence templates from genome (default hg19/b37) 
 ##       for detection of 5' and 3' fusions.
 
 # === Requires:

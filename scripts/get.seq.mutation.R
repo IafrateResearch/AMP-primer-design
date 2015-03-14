@@ -1,6 +1,6 @@
 
 ## This script is to be called by 'step.1.retreive.sequence.R' to:
-##   - retreive sequences from genome (hg19/GRCh37) for detection of 
+##   - retreive sequences from genome (default hg19/GRCh37) for detection of 
 ##     coding seqeunce mutation (including SNV, Indel and CNV).
 ##   
 
