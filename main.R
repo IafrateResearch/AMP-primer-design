@@ -225,7 +225,7 @@ if (assaytype != 'bed'){
 	}
 
 ## comment out below to keep intermediate results for troubleshooting.
-	system('rm -rf split seq seq.noMask out all.psl.matt.sorted primer.pos.tm.sorted primer.psl missed.seq_* splitFa.Rout panel.NM primer.candidates.0 primer3.exome.setting*')
+system('rm -rf split seq seq.noMask out all.psl.matt.sorted primer.pos.tm.sorted primer.psl missed.seq_* splitFa.Rout panel.NM primer.candidates.0 primer3.exome.setting*')
 
 cat("==========\nAMP-primer-design completed successfully.\n==========\n")
 ## END
