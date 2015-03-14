@@ -24,7 +24,6 @@
 
 
 library(BSgenome.Hsapiens.UCSC.hg19)
-library(SNPlocs.Hsapiens.dbSNP.20111119)
 ref = read.table('target.refseq',header=F,stringsAsFactors=F)
 names(ref)=c('name',    'chrom', 'strand', 'txStart', 'txEnd', 'cdsStart', 'cdsEnd', 'exonCount', 'exonStarts', 'exonEnds', 'score', 'name2', 'cdsStartStat', 'cdsEndStat', 'exonFrames')
 

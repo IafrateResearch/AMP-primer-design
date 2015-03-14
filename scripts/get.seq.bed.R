@@ -23,7 +23,6 @@
 # Rscript --vanilla get.seq.bed.R  target tempsize depdir subExonSize leadsize
 
 library(BSgenome.Hsapiens.UCSC.hg19)
-library(SNPlocs.Hsapiens.dbSNP.20111119)
 bed = read.table('_input.bed', header=T, stringsAsFactors=F)
 
 target = commandArgs(TRUE)[1]

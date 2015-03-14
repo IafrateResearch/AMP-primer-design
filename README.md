@@ -31,7 +31,6 @@ Required software, libraries and data dependency
 - Primer3 (http://primer3.sourceforge.net/primer3_manual.htm)
 - BLAT (https://users.soe.ucsc.edu/~kent/src/)
 - R libraries: BSgenome.Hsapiens.UCSC.hg19
-                SNPlocs.Hsapiens.dbSNP.20111119
 - The dependency data (e.g. ~/dependency-AMP/)
 - To prepare the refGene transcript and exons coordinates:
 
