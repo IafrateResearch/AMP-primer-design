@@ -56,4 +56,5 @@ python /path/to/AMP-primer-design/design.py \
         --tempsize=150  \
         --NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa" \
         --subExonSize=300 \
-	--leadsize=5
+	--leadsize=5  
+

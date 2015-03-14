@@ -62,23 +62,81 @@ The dependency data (e.g. in '~/dependency-AMP') should contain:
 | dbsnp/  | dbSNP and clinically relevant SNPs from the 1000 Genomes Project. Prepared above. |
 
 
-## Usage example 1 - a 'fusion' panel
+## Usage examples
+Checkout help doc:
+
+    > python /path/to/AMP-primer-design/design.py --help
+
+
+### Usage examples 1 - a 'fusion' panel
 
 1. Create a panel gene list file with RefSeq transcript IDs "NM_". See 'example/lung.fusion.genelist.txt' for example. Alternatively, you can use your own template sequences (e.g. virus) under the ~/project-AMP/$panel/seq/ folder (under development).
 
 2. Run the command (see also 'example.command.txt')
 
-    > python /path/to/AMP-primer-design/design.py --assaytype="fusion" --panel="lung.fusion" --genelist="~/project-AMP/lung.fusion.genelist.txt" --pjdir="~/project-AMP"  --depdir="~/dependency-AMP" --ampdir="~/repo/AMP-primer-design" --primer3path="~/primer3-2.3.5" --blatdir="~/bin/x86_64" --keep_gfSvr=1 --GSP1tag="GGATCTCGACGCTCTCCCT" --GSP2tag="CCTCTCTATGGGCAGTCGGTGAT" --ncpu=8 --tempsize=90 --NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa"
+    > python /path/to/AMP-primer-design/design.py  
+	--assaytype="fusion"  
+	--panel="lung.fusion"  
+	--genelist="~/project-AMP/lung.fusion.genelist.txt"  
+	--pjdir="~/project-AMP"   
+	--depdir="~/dependency-AMP"  
+	--ampdir="~/repo/AMP-primer-design"  
+	--primer3path="~/primer3-2.3.5"  
+	--blatdir="~/bin/x86_64"  
+	--keep_gfSvr=1  
+	--GSP1tag="GGATCTCGACGCTCTCCCT"  
+	--GSP2tag="CCTCTCTATGGGCAGTCGGTGAT"  
+	--ncpu=8  
+	--tempsize=90  
+	--NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa"  
 
-Or checkout help doc:
 
-    > python /path/to/AMP-primer-design/design.py --help
-
-
-## Usage example 2, a 'mutation' panel
+### Usage example 2, a 'mutation' panel
 
 1. Create a panel gene list file with RefSeq transcript IDs "NM_". See 'example/cancer.v1.genelist.txt' for example. Alternatively, you can use your own template sequences (e.g. virus) under the ~/project-AMP/ panel/seq/ folder (under development).
 
 2. Run the command (see also 'example.command.txt')
 
-    > python /path/to/AMP-primer-design/design.py --assaytype="mutation" --panel="cancer.v1" --genelist="~/project-AMP/cancer.v1.genelist.txt" --pjdir="~/project-AMP" --depdir="~/dependency-AMP" --ampdir="~/repo/AMP-primer-design" --primer3path="~/primer3-2.3.5" --blatdir="~/bin/x86_64" --keep_gfSvr=1 --GSP1tag="GGATCTCGACGCTCTCCCT" --GSP2tag="CCTCTCTATGGGCAGTCGGTGAT" --ncpu=32 --tempsize=100 --NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa" --subExonSize=300 --leadsize=3
+    > python /path/to/AMP-primer-design/design.py  
+	--assaytype="mutation"  
+	--panel="cancer.v1"  
+	--genelist="~/project-AMP/cancer.v1.genelist.txt"  
+	--pjdir="~/project-AMP"  
+	--depdir="~/dependency-AMP"  
+	--ampdir="~/repo/AMP-primer-design"  
+	--primer3path="~/primer3-2.3.5"  
+	--blatdir="~/bin/x86_64"  
+	--keep_gfSvr=1  
+	--GSP1tag="GGATCTCGACGCTCTCCCT"  
+	--GSP2tag="CCTCTCTATGGGCAGTCGGTGAT"  
+	--ncpu=32  
+	--tempsize=100  
+	--NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa"  
+	--subExonSize=300  
+	--leadsize=3  
+
+
+### Usage example 3, using 'bed' file specified by user  
+
+1. Generate a standard BED (e.g. cidstr.bed) for target regions (note the reference version GRCh37 or GRCh38)
+
+2. Run the command (see also 'example.command.txt')
+
+    > python /path/to/AMP-primer-design/design.py  
+	--assaytype="bed"  
+	--panel="cidstr"  
+	--genelist="~/project-AMP/cidstr.bed"  
+	--pjdir="~/project-AMP"  
+	--depdir="~/dependency-AMP"  
+	--ampdir="~/repo/AMP-primer-design"  
+	--primer3path="~/primer3-2.3.5"  
+	--blatdir="~/bin/x86_64"  
+	--keep_gfSvr=1  
+	--GSP1tag="GGATCTCGACGCTCTCCCT"  
+	--GSP2tag="CCTCTCTATGGGCAGTCGGTGAT"  
+	--ncpu=32  
+	--tempsize=100  
+	--NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa"  
+	--subExonSize=300  
+	--leadsize=3   
+ 
