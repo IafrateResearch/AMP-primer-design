@@ -3,7 +3,7 @@
 
 ## Note: reference version, GRCh37 or GRCh38, should be consistent between 
 ## 	dependency data, input BED file (if used) and pipeline (get.seq.###.R).
-## 	The default version of this pipeline is GRCh37 (hg19).
+## 	The default version here is GRCh37 (hg19).
 
 # run this under dependency-AMP folder (e.g. ~/dependency-AMP).
 cd ~/dependency-AMP
