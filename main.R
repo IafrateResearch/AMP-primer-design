@@ -223,8 +223,10 @@ if (assaytype != 'bed'){
 	if (file.exists('missed.seq_seq_primer3.exome.setting.3')){
 		system('mv missed.seq_seq_primer3.exome.setting.3  targets.failed.primer3.design.txt')
 	}
+
+## comment out below to keep intermediate results for troubleshooting.
 	system('rm -rf split seq seq.noMask out all.psl.matt.sorted primer.pos.tm.sorted primer.psl missed.seq_* splitFa.Rout panel.NM primer.candidates.0 primer3.exome.setting*')
 
-cat("AMP-primer-design completed successfully.\n")
+cat("==========\nAMP-primer-design completed successfully.\n==========\n")
 ## END
 

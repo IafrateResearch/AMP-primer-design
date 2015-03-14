@@ -34,7 +34,7 @@ python /path/to/AMP-primer-design/design.py \
         --GSP1tag="GGATCTCGACGCTCTCCCT"  \
         --GSP2tag="CCTCTCTATGGGCAGTCGGTGAT"  \
         --ncpu=32 \
-        --tempsize=100  \
+        --tempsize=150  \
         --NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa" \
         --subExonSize=300 \
 	--leadsize=3
@@ -53,7 +53,7 @@ python /path/to/AMP-primer-design/design.py \
         --GSP1tag="GGATCTCGACGCTCTCCCT"  \
         --GSP2tag="CCTCTCTATGGGCAGTCGGTGAT"  \
         --ncpu=32 \
-        --tempsize=100  \
+        --tempsize=150  \
         --NGSadaptors_and_humanRep="NGSadaptors_and_humanRep.fa" \
         --subExonSize=300 \
 	--leadsize=5

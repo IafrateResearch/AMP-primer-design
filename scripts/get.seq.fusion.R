@@ -35,11 +35,11 @@ if (gene %in% ref$name2){
    iii = substr(1001:1999, 2, 5)
 
    geneTab = ref[ref$name2 == gene,]
-   chrom = sub('chr','',geneTab$chrom)
-   snp.chr = read.table(paste(depdir, '/dbsnp/snp.', chrom,sep=''), stringsAsFactors=F)
+   chrom = sub('chr', '', geneTab$chrom)
+   snp.chr = read.table(paste(depdir, '/dbsnp/snp.', chrom, sep=''), sep='\t', header=F, stringsAsFactors=F)
 
-   start = as.numeric(unlist(strsplit(as.character(geneTab$exonStarts),','))) -1
-   end = as.numeric(unlist(strsplit(as.character(geneTab$exonEnds),','))) +1
+   start = as.numeric(unlist(strsplit(as.character(geneTab$exonStarts), ','))) -1
+   end = as.numeric(unlist(strsplit(as.character(geneTab$exonEnds), ','))) +1
    strand = geneTab$strand
    n.exon = geneTab$exonCount
    size = end - start
@@ -75,13 +75,13 @@ if (gene %in% ref$name2){
 
 	   getSeq$seq.noMask = getSeq$getSeq
 		   ## mask dbsnp
-		   snp12 = subset(snp.chr, V2 >= start.ex+7 & V2 <= start.ex+min(size.ex, tempsize))
-		   snp12n = length(snp12$V1)
+		   snp12 = subset(snp.chr, V2 >= start.ex + 7 & V2 <= start.ex + min(size.ex, tempsize))
+		   snp12n = nrow(snp12)
 		   seq12 = getSeq$getSeq
 		   if (snp12n>0){
 			   for (i in 1:snp12n){
 			   pos = snp12$V2[i] - (start.ex+7) +1
-			   Ns = nchar(snp12$V4[i])
+			   Ns = nchar(snp12$V3[i])
 			   l.seq = substr(seq12, 1, pos -1)
 			   r.seq = substr(seq12, pos + Ns, min(size.ex,tempsize)+1)
 			   seq12 = paste(l.seq, paste(rep('N', Ns), collapse=''), r.seq, sep='')
@@ -109,12 +109,12 @@ if (gene %in% ref$name2){
 	   getSeq$seq.noMask = getSeq$getSeq
 		   ## mask dbsnp
 		   snp34 = subset(snp.chr, V2 >= (end.ex-min(size.ex-1,tempsize)+1) & V2 <= end.ex-6)
-		   snp34n = length(snp34$V1)
+		   snp34n = nrow(snp34)
 		   seq34 = getSeq$getSeq
 		   if (snp34n>0){
 			   for (i in 1:snp34n){
 			   pos = end.ex-1-5 - snp34$V2[i] 
-			   Ns = nchar(snp34$V4[i])
+			   Ns = nchar(snp34$V3[i])
 			   l.seq = substr(seq34, 1, pos)
 			   r.seq = substr(seq34, pos + Ns +1, min(size.ex-1, tempsize)+2)
 			   seq34 = paste(l.seq, paste(rep('N',Ns),collapse=''), r.seq, sep='')

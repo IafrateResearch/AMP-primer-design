@@ -47,15 +47,10 @@ Required software, libraries and data dependency
 
     > cat NGSadaptors.fa humrep.fasta > /path/to/dependency/NGSadaptors_and_humanRep.fa
 
-- (To be updated...) To prepare dbSNP and clinically relevant SNPs from the 1000 Genomes Project (20120626 Release), pre-split by chromosome and saved as snp.1, snp.2, ...snp.Y, such as:
+- To prepare dbSNP and clinically relevant SNPs from the 1000 Genomes Project (20120626 Release), run make.dbsnp.database.sh (please note the reference version GRCh37 or GRCh38):
 
-    > head -n 3 snp.1
+    > bash make.dbsnp.database.sh
 
-    > "V1" "V2" "V3" "V4" "V5"
-
-    > "1" "1" 10583 "rs58108140" "G" "A"
-
-    > "2" "1" 10611 "rs189107123" "C" "G"
 
 The dependency data (e.g. in '~/dependency-AMP') should contain:
 

@@ -52,7 +52,7 @@ if (gene %in% ref$name2){
 
    ## read dbsnp
    chrn = toupper(sub('chr', '', chrom))
-   snp.chr = read.table(paste(depdir, '/dbsnp/snp.', chrn, sep=''), stringsAsFactors=F)
+   snp.chr = read.table(paste(depdir, '/dbsnp/snp.', chrn, sep=''), sep='\t', header=F, stringsAsFactors=F)
    
    # default to ignore utr sequnece and design primer for coding sequences only.
    if (!exists('utr')){utr = 0}
@@ -108,12 +108,12 @@ if (gene %in% ref$name2){
 	   ## mask dbsnp
 	   snp = subset(snp.chr, V2 >= end.ex.sub 
 				& V2 <= end.ex.sub + tempsize)
-	   snpn = length(snp$V1)
+	   snpn = nrow(snp)
 	   seq = ex.3f$getSeq
 	   if (snpn>0){
 		   for (i in 1:snpn){
 		   pos = snp$V2[i] - end.ex.sub +1
-		   Ns = nchar(snp$V4[i])
+		   Ns = nchar(snp$V3[i])
 		   l.seq = substr(seq, 1, pos -1)
 		   r.seq = substr(seq, pos + Ns, end.ex.sub +
 				 tempsize + 1)
@@ -173,12 +173,12 @@ if (gene %in% ref$name2){
 	   ## mask dbsnp
 	   snp5 = subset(snp.chr, V2 >= (start.ex.sub2) 
 				& V2 <= start.ex.sub)
-	   snp5n = length(snp5$V1)
+	   snp5n = nrow(snp5)
 	   seq5 = ex.5r$getSeq
 	   if (snp5n>0){
 		   for (i in 1:snp5n){
 		   pos = start.ex.sub - snp5$V2[i] +1
-		   Ns = nchar(snp5$V4[i])
+		   Ns = nchar(snp5$V3[i])
 		   l.seq = substr(seq5, 1, pos - Ns)
 		   r.seq = substr(seq5, pos + 1, start.ex.sub.TplSize)
 		   seq5 = paste(l.seq, paste(rep('N', Ns), collapse='')
